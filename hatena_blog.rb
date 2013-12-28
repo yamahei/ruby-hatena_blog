@@ -41,17 +41,16 @@ class HatenaBlog
 			break if url == summaryurl
 			sleep 1
 		end
-		
 	
 		# get draft list
 		draftinfos = []
 		driver.navigate.to draftsurl
 
-		form = driver.find_element(:xpath, "//form[@id='delete-form']/table[@class='table']")
-		drafts = form.find_elements(:xpath, "//tr[@data-uuid]")
+		container = driver.find_element(:class_name, "js-entries-container")
+		drafts = container.find_elements(:class_name, "private")
 		drafts.each{| tr |
 			draftinfo = {}
-			draftinfo[:uuid] = tr.attribute("data-uuid")
+			draftinfo[:uuid] = tr.find_element(:name, "entry").attribute("value")
 			draftinfo[:title] = tr.find_element(:class_name, "draft-title").text.strip
 			draftinfo[:button] = tr.find_element(:class_name, "btn")
 			draftinfos << draftinfo
